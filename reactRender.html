@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    let counter = 0;
+
+    // reactJS는 바닐라 JS와 다르게 function을 사용하여 바뀐 부분만 reRender
+    function countUP() {
+        counter++; // counter를 증가 시켜도 바로 ui에 적용이 안 되기 때문에 함수가 작동할 때마다 render을 한 번 더 해야함
+        reRender(); 
+    }
+
+    function reRender() {
+        // 이 방법 또한 reRender이 가능하지만 최선의 방안은 x
+        ReactDOM.render(<App />, root); 
+    }
+
+    const App = () => (
+        <div>
+            <h3>
+                Total clicks: {counter}
+            </h3>
+            <button onClick={countUP}>
+                Click me
+            </button>
+        </div>
+    );
+
+    reRender();
+</script>
+</html>

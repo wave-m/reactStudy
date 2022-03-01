@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    
+    // 함수형 컴포넌트
+    //props에서 text를 꺼내는 방식
+    //props는 function도 전달 가능
+    function Btn({ text, onClick, big }) {
+        console.log(text);
+        return <button 
+        onClick={onClick}
+        style={{
+           backgroundColor: "tomato",
+           color: "white",
+           padding: "10px 20px",
+           border: 0, 
+           borderRadius: 5, 
+           fontSize : big ? 18 : 15,
+        }}>{ text }</button>;
+    }
+
+    // 컴포넌트 re render을 안 하겠다면 react memo를 사용
+    const MemorizedBtn = React.memo(Btn);
+
+    function App() {
+        const [value, setValue] = React.useState("Save Changes");
+        const changeValue = () => setValue("Revert Changes");
+        return (
+            <div>
+                <Btn text={value} onClick={changeValue} big={true}/>
+                <MemorizedBtn text="Confirm" big={false}/>
+            </div>
+        );
+    };
+
+    ReactDOM.render(<App />, root); 
+</script>
+</html>

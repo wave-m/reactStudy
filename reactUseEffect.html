@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>
+<script type="text/babel">
+    import Button from './Button.js';
+    import styles from './App.module.css';
+    import { useState, useEffect } from 'react';
+
+    function Hello() {
+    function destroyedFn(){ // 주로 사용하지 않지만 알면 좋은 기능
+        console.log("bye :(");
+    }
+
+    function effectFn(){
+        console.log("created :)");
+        return destroyedFn;
+    }
+
+    useEffect(
+        effectFn
+        // ()=> {
+        // console.log("created :)");
+        // return () => console.log("destroyed :("); // cleanup function
+        // }
+    , []);
+    return <h1>Hello</h1>;
+    }
+
+    function App() {
+    const [showing, setShowing] = useState(false);
+    const [counter, setValue] = useState(0);
+    // 1. value, 2. value를 modify하는 function
+    const [keyword, setKeyword] = useState("");
+
+    const onClick = () => setValue((prev) => prev + 1);
+    const onChange = (event) => { setKeyword(event.target.value)};
+
+    const onClickBtn = () => setShowing((prev) => !prev);
+
+    // state가 변경될 때 모든 component와 code는 다시 실행됨
+    console.log("i run all the time");
+    
+    // 아래와 같이 useEffect를 사용할 경우 제일 처음의 rendering 될 때를 제외하고는 rerender 안 됨
+    useEffect(() => {
+        console.log("CALL THE API...");
+    }, []);
+
+    // keyword가 변화할 때 코드를 실행할 거라고 react.js에게 알려주는 것(시작할 때도 작동)
+    useEffect(()=>{
+        if(keyword !== "")
+        console.log("SEARCH FOR ", keyword);
+    }, [keyword]);
+
+    useEffect(()=>{
+        console.log("i run when 'counter' changes");
+    }, [counter]);
+
+    // keyword와 counter 두가지 중 하나라도 변화할 때 코드를 실행할 거라고 react.js에게 알려주는 것
+    useEffect(()=>{
+        console.log("i run when 'keyword & counter' changes");
+    }, [keyword, counter]);
+
+
+    //console.log("SEARCH FOR marvel");
+    return (
+        <div>
+        <input
+            value={keyword} 
+            onChange={onChange}
+            type="text"
+            placeholder="Search Here..."
+        />
+        <h1 className={styles.title}>
+            {counter}
+        </h1>
+        <button onClick={onClick}>Click</button>
+        <Button text={"hello"} />
+
+        <br />
+        {showing? <Hello /> : null}
+        <button onClick={onClickBtn}>{showing? "Hide" : "Show"}</button>
+        </div>
+    );
+    }
+
+    export default App;
+
+</script>
+</html>
